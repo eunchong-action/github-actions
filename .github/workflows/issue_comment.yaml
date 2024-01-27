@@ -10,7 +10,7 @@ jobs:
           run: echo ${{ github.event.issue.pull_request }}
 
     issue-comment: #issue에 comment를 달 때 실행
-        if: ${{ github.event.issue.pull_request }}
+        if: ${{ !github.event.issue.pull_request }}
         runs-on: ubuntu-latest
         steps:
         - name: issue comment

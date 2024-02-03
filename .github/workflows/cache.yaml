@@ -24,4 +24,8 @@ jobs:
     - name: Install dependencies
       run: |
         cd my-app
-        npm run build 
+        npm ci
+    - name: npm build
+      run: |
+        cd my-app
+        npm run build

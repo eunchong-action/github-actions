@@ -1,0 +1,31 @@
+name: create-repo
+on:
+  workflow_dispatch:
+    inputs:
+      prefix:
+        description: 'set repo prefix'
+        required: true #무조건 넣어야 하는 값이기 때문에 true로 설정 
+        default: 'service'
+        type: choice
+        options: #임의의 값으로 example, service 설정 
+        - example
+        - service
+      name:
+        description: 'set repo name'
+        required: true
+        default: 'github-actions'
+        type: string 
+
+jobs:
+  create-repo-automation:
+    runs-on: ubuntu-latest
+    steps:
+    - name: gh auth login #github 권한을 받아 온다. 
+      run: |
+        echo ${{ secrets.PERSONAL_ACCESS_TOKEN }} | gh auth login --with-token
+    - name: create-repo #입력받은 input 값으로 repo 생성하는 커맨드 
+      run: |
+        gh repo create eunchong-action/${{ inputs.prefix }}-${{ inputs.name }} --public --add-readme
+
+
+

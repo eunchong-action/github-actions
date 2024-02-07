@@ -24,8 +24,32 @@ jobs:
       run: |
         echo ${{ secrets.PERSONAL_ACCESS_TOKEN }} | gh auth login --with-token
     - name: create-repo #입력받은 input 값으로 repo 생성하는 커맨드 
+      id: create-repo
       run: |
         gh repo create eunchong-action/${{ inputs.prefix }}-${{ inputs.name }} --public --add-readme
+    - name: slack #두번째 step이 실패되어도 무조건 실행되도록 한다. 
+      if: always()
+      uses: slackapi/slack-github-action@v1.24.0
+      with:
+        payload: |
+          {
+            "attachments": [
+              {
+                "pretext": "create repo result",
+                "color": "28a745".
+                "fields": [
+                  {
+                    "title": "create repo result ${{ steps.create-repo.outcome }}",
+                    "short": true,
+                    "value": "${{ inputs.prefix }}-${{ inputs.name }}"
+                  }
+                ]
+              }
+            ]
+          }
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
 
 
 

@@ -1,0 +1,28 @@
+name: issue-notify
+
+on: # 트리거 구성 
+  issues:  # issue가 오픈될 때 실행 
+    types: [opened]
+
+jobs:
+  get-keyword:
+    runs-on: ubuntu-latest
+    outputs:
+      level: ${{ steps.get-keyword.outputs.level }}
+    steps:
+    - name: checkout #github repo 코드를 github job으로 가져온다. 
+      uses: actions/checkout@v4
+    - name: get keyword
+      id: get-keyword
+      run: |
+        echo level=Undefined >> $GITHUB_OUTPUT 
+
+        keywords=$(cat keyword-list.txt)
+        for keyword in $keywords; do
+          if [[ "${{ github.event.issue.title }}" =~ "$keyword" ]]; then
+            echo level=$keyword >> $GITHUB_OUTPUT
+          fi
+        done
+    - name: get output
+      run: |
+        echo ${{ steps.get-keyword.outputs.level }}

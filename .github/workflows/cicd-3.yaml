@@ -49,6 +49,7 @@ jobs:
       run: |
         if [[ ${{ github.ref_type }} == "tag" ]]; then
           echo "environment=qa" >> $GITHUB_OUTPUT
+          exit 0
         fi
 
         if [[ ${{ github.ref_type }} == "branch" ]]; then
@@ -62,7 +63,7 @@ jobs:
 
 
   image-build: #PR이 merge되면 실행되는 job, 즉 CD 단계에서 실행된다. 
-    if: github.event.pull_request.merged == true 
+    if: github.event.pull_request.merged == true || github.ref_type == 'tag'
     needs: [set-environment]
     runs-on: ubuntu-latest
     permissions:
